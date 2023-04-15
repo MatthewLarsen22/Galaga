@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang = "en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>Galaga</title>
+
+    <link rel = "stylesheet" type = "text/css" href = "styles/game.css">
+</head>
+<body>
+    <div id = "game">
+        <div id = "main-menu" class = "screen">
+            <br>
+            <h1>Galaga</h1>
+            <br>
+            <ul class = "menu">
+                <li><button id = "id-new-game">New Game</button></li>
+                <li><button id = "id-high-scores">High Scores</button></li>
+                <li><button id = "id-credits">Credits</button></li>
+            </ul>
+        </div>
+        <div id = "game-play" class = "screen">
+            <canvas id = "id-canvas" width = "960" height = "540"></canvas>
+        </div>
+        <div id = "high-scores" class = "screen">
+            <h1>High Scores</h1>
+            <ol id = "id-high-scores-list">
+
+            </ol>
+            <ul class = "menu">
+                <li><button id = "id-high-scores-back">Back</button></li>
+            </ul>
+        </div>
+        <div id = "credits" class = "screen">
+            <h1>Credits</h1>
+            <p>Developed By:</p>
+            <p>Matthew Larsen</p>
+            <ul class = "menu">
+                <li><button id = "id-credits-back">Back</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <script data-main = "scripts/Loader" src="scripts/require.js"></script>
+</body>
+</html>
