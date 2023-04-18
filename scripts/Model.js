@@ -12,52 +12,22 @@ MyGame.model = (function(input, components, renderer, assets) {
     let entities = {};
     let myKeyboard = input.Keyboard();
 
+    let butterfly = null;
     let gameOver = false;
+    function reset() {
+        MyGame.assets['audio-music-background'].pause();
+        MyGame.assets['audio-music-background'].currentTime = 0;
 
-    // ------------------------------------------------------------------
-    //
-    // Unregister the various keyboard events.
-    //
-    // ------------------------------------------------------------------
-    function unregisterCharacterKeyboardEvents() {
-        for (let item in characterHandlerIds) {
-            if (characterHandlerIds.hasOwnProperty(item)) {
-                let entry = characterHandlerIds[item];
-                myKeyboard.unregisterHandler(entry.key, entry.handlerId);
-            }
-        }
-    }
+        background = null;
+        character = null;
+        characterHandlerIds = undefined;
+        nextEntityId = 0;
+        entities = {};
+        myKeyboard = input.Keyboard();
 
-    // ------------------------------------------------------------------
-    //
-    // Register the various keyboard events.
-    //
-    // ------------------------------------------------------------------
-    function registerCharacterKeyboardEvents(character) {
-        let handlerIds = [];
-        let handlerId;
+        let gameOver = false;
 
-        handlerId = myKeyboard.registerHandler(function(elapsedTime) {
-            character.moveLeft(elapsedTime);
-        }, 'a', true);
-        handlerIds.push({ key: 'a', handlerId: handlerId });
-
-        handlerId = myKeyboard.registerHandler(function(elapsedTime) {
-            character.moveRight(elapsedTime);
-        }, 'd', true);
-        handlerIds.push({ key: 'd', handlerId: handlerId });
-
-        handlerId = myKeyboard.registerHandler(function(elapsedTime) {
-            character.moveLeft(elapsedTime);
-        }, 'ArrowLeft', true);
-        handlerIds.push({ key: 'ArrowLeft', handlerId: handlerId });
-
-        handlerId = myKeyboard.registerHandler(function(elapsedTime) {
-            character.moveRight(elapsedTime);
-        }, 'ArrowRight', true);
-        handlerIds.push({ key: 'ArrowRight', handlerId: handlerId });
-
-        return handlerIds;
+        unregisterCharacterKeyboardEvents();
     }
 
     // ------------------------------------------------------------------
@@ -66,28 +36,30 @@ MyGame.model = (function(input, components, renderer, assets) {
     //
     // ------------------------------------------------------------------
     function initialize() {
-        // let backgroundKey = 'background';
-        //
-        // // Define the TiledImage model we'll be using for our background.
-        // background = components.TiledImage({
-        //     pixel: { width: assets[backgroundKey].width, height: assets[backgroundKey].height },
-        //     size: { width: world.width, height: world.height },
-        //     tileSize: assets[backgroundKey].tileSize,00
-        //     assetKey: backgroundKey
-        // });
-
         //
         // Get our spaceship model and renderer created
         character = components.Character({
-            size: { width: 20, height: 20 },
-            center: { x: (renderer.core.canvas.width / 2), y: (renderer.core.canvas.height - 20) },
-            velocity: { x: 5, y: 0 }
+            size: { width: 32, height: 32 },
+            center: { x: (renderer.core.canvas.width / 2), y: (renderer.core.canvas.height - 50) },
+            velocity: 5,
+            reportEvent
         });
         entities[nextEntityId++] = {
             model: character,
             renderer: renderer.Character
         };
         characterHandlerIds = registerCharacterKeyboardEvents(character);
+
+        butterfly = components.Butterfly({
+            size: { width: 32, height: 32 },
+            center: { x: (renderer.core.canvas.width / 2), y: (renderer.core.canvas.height / 2) },
+            velocity: 5,
+            reportEvent
+        });
+        entities[nextEntityId++] = {
+            model: butterfly,
+            renderer: renderer.Butterfly
+        };
 
 
         // Start the background music.
@@ -112,6 +84,16 @@ MyGame.model = (function(input, components, renderer, assets) {
     // ------------------------------------------------------------------
     function update(elapsedTime) {
         components.ParticleSystem.update(elapsedTime);
+
+        for (let entityId in entities) {
+            if(entities.hasOwnProperty(entityId)) {
+                let entity = entities[entityId];
+                entity.model.update(elapsedTime);
+                if (entity.renderer.update) {
+                    entity.renderer.update(entity.model, elapsedTime);
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------
@@ -130,18 +112,92 @@ MyGame.model = (function(input, components, renderer, assets) {
         renderer.ParticleSystem.render(components.ParticleSystem);
     }
 
-    function reset() {
-        MyGame.assets['audio-music-background'].pause();
-        MyGame.assets['audio-music-background'].currentTime = 0;
+    // --------------------------------------------------------------
+    //
+    // Interface that allows systems to report events back to the overall
+    // game model for processing.
+    //
+    // --------------------------------------------------------------
+    function reportEvent(info) {
+        switch (info.type) {
+            case MyGame.enums.Event.MissileFired:
+                createMissile(info);
+                break;
+            case MyGame.enums.Event.MissileExitedScreen:
+                // Remove missiles that have left the screen
+                const entityArray = Object.entries(entities);
+                const filteredArray = entityArray.filter(([entityId, entity]) => entity.model !== info.model)
+                entities = Object.fromEntries(filteredArray);
+                break;
+        }
+    }
 
-        background = null;
-        character = null;
-        characterHandlerIds = undefined;
-        nextEntityId = 0;
-        entities = {};
-        myKeyboard = input.Keyboard();
+    function createMissile(info) {
+        let missile = components.Missile({
+            size: { width: 32, height: 32 },
+            center: { x: info.center.x, y: info.center.y },
+            velocity: 2,
+            reportEvent
+        });
+        entities[nextEntityId++] = {
+            model: missile,
+            renderer: renderer.Missile
+        };
+    }
 
-        unregisterCharacterKeyboardEvents();
+    // ------------------------------------------------------------------
+    //
+    // Unregister the various keyboard events.
+    //
+    // ------------------------------------------------------------------
+    function unregisterCharacterKeyboardEvents() {
+        for (let item in characterHandlerIds) {
+            if (characterHandlerIds.hasOwnProperty(item)) {
+                let entry = characterHandlerIds[item];
+                myKeyboard.unregisterHandler(entry.key, entry.handlerId);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------
+    //
+    // Register the various keyboard events.
+    //
+    // ------------------------------------------------------------------
+    function registerCharacterKeyboardEvents(character) {
+        let handlerIds = [];
+        let handlerId;
+
+        let leftKey = localStorage.getItem("left-key");
+        let rightKey = localStorage.getItem("right-key");
+        let fireKey = localStorage.getItem("fire-key");
+
+        if (!leftKey) {
+            leftKey = 'ArrowRight'
+        }
+        if (!rightKey) {
+            rightKey = 'ArrowRight'
+        }
+        if (!fireKey) {
+            fireKey = ' ';
+        }
+
+        handlerId = myKeyboard.registerHandler(function(elapsedTime) {
+            character.moveLeft(elapsedTime);
+        }, leftKey, true);
+        handlerIds.push({ key: leftKey, handlerId: handlerId });
+
+        handlerId = myKeyboard.registerHandler(function(elapsedTime) {
+            character.moveRight(elapsedTime);
+        }, rightKey, true);
+        handlerIds.push({ key: rightKey, handlerId: handlerId });
+
+        handlerId = myKeyboard.registerHandler(function() {
+            character.fireMissile();
+        }, fireKey, true);
+        handlerIds.push({ key: fireKey, handlerId: handlerId });
+
+        return handlerIds;
     }
 
     return {

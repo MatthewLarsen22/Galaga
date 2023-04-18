@@ -9,7 +9,8 @@ MyGame.components.Types = (function() {
     let that = {
         get Undefined() { return 0; },
         get Character() { return 1; },
-        get Platform() { return 2; }
+        get Missile() { return 2; },
+        get Butterfly() { return 3; }
     };
 
     return that;

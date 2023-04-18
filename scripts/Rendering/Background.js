@@ -8,20 +8,8 @@ MyGame.renderer.core.drawBackground = function() {
     let core = MyGame.renderer.core;
 
     core.drawImage(
-        MyGame.assets['background-left'],
+        MyGame.assets['background'],
         0,
         0,
-        core.canvas.width / 2, core.canvas.height);
-
-    core.drawImage(
-        MyGame.assets['background-right'],
-        core.canvas.width / 2,
-        0,
-        core.canvas.width / 2, core.canvas.height);
-
-    core.drawImage(
-        MyGame.assets['background-center'],
-        core.canvas.width / 4,
-        0,
-        core.canvas.width / 2, core.canvas.height);
+        core.canvas.width, core.canvas.height);
 };

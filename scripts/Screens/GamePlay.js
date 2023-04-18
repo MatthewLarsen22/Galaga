@@ -49,7 +49,6 @@ MyGame.screens['game-play'] = (function(manager, input, renderer, components, mo
 
     function unregisterInputs() {
         myKeyboard.unregisterHandler('Escape', inputIds['Escape']);
-        model.reset();
     }
 
     function registerInputs() {
@@ -58,6 +57,7 @@ MyGame.screens['game-play'] = (function(manager, input, renderer, components, mo
             // Stop the game loop by canceling the request for the next animation frame
             cancelNextRequest = true;
             unregisterInputs();
+            model.reset();
             //
             // Then, return to the main menu
             manager.showScreen('main-menu');

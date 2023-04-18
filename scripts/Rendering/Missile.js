@@ -3,7 +3,7 @@
 // Rendering function for a /Components/SpaceShip object.
 //
 // ------------------------------------------------------------------
-MyGame.renderer.Character = (function(core) {
+MyGame.renderer.Missile = (function(core) {
     'use strict';
     let that = {};
 

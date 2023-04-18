@@ -15,6 +15,10 @@ MyGame.screens['main-menu'] = (function(manager) {
             'click',
             function() {manager.showScreen('game-play'); });
 
+        document.getElementById('id-settings').addEventListener(
+            'click',
+            function() { manager.showScreen('settings'); });
+
         document.getElementById('id-high-scores').addEventListener(
             'click',
             function() { manager.showScreen('high-scores'); });

@@ -4,7 +4,8 @@ let MyGame = {
     components: {},
     renderer: {},
     utilities: {},
-    assets: {}
+    assets: {},
+    enums: {}
 };
 
 //------------------------------------------------------------------
@@ -31,6 +32,10 @@ MyGame.loader = (function() {
         message: 'Utilities loaded',
         onComplete: null
     }, {
+        scripts: ['Enums'],
+        message: 'Enums loaded',
+        onComplete: null
+    }, {
         scripts: ['Input/Keyboard'],
         message: 'Inputs loaded',
         onComplete: null
@@ -47,7 +52,7 @@ MyGame.loader = (function() {
         message: 'Base Entity class loaded',
         onComplete: null
     }, {
-        scripts: ['Components/Character'],
+        scripts: ['Components/Butterfly', 'Components/Character', 'Components/Missile'],
         message: 'Gameplay Components loaded',
         onComplete: null
     },{
@@ -55,11 +60,11 @@ MyGame.loader = (function() {
         message: 'Rendering core loaded',
         onComplete: null
     }, {
-        scripts: ['Rendering/Background', 'Rendering/Text', 'Rendering/Sprite', 'Rendering/ParticleSystem'],
+        scripts: ['Rendering/AnimatedModel', 'Rendering/Background', 'Rendering/Text', 'Rendering/Sprite', 'Rendering/ParticleSystem'],
         message: 'Core Components Rendering loaded',
         onComplete: null
     }, {
-        scripts: ['Rendering/Character'],
+        scripts: ['Rendering/Butterfly', 'Rendering/Character', 'Rendering/Missile'],
         message: 'Gameplay Components Rendering loaded',
         onComplete: null
     }, {
@@ -71,7 +76,7 @@ MyGame.loader = (function() {
         message: 'Screen Manager loaded',
         onComplete: null
     }, {
-        scripts: ['Screens/Credits', 'Screens/GamePlay', 'Screens/HighScores', 'Screens/MainMenu'],
+        scripts: ['Screens/Credits', 'Screens/GamePlay', 'Screens/HighScores', 'Screens/Settings', 'Screens/MainMenu'],
         message: 'Screens loaded',
         onComplete: null
     }];
@@ -79,14 +84,14 @@ MyGame.loader = (function() {
         key: 'character',
         source: './assets/graphics/Galaga_Fighter.png'
     }, {
-        key: 'background-left',
-        source: './assets/graphics/background-left.png'
+        key: 'missile',
+        source: './assets/graphics/Galaga_Missile.png'
     }, {
-        key: 'background-center',
-        source: './assets/graphics/background-center.jpg'
+        key: 'butterfly',
+        source: './assets/graphics/Galaga_Butterfly.png'
     }, {
-        key: 'background-right',
-        source: './assets/graphics/background-right.png'
+        key: 'background',
+        source: './assets/graphics/background.jpg'
     }, {
         key: 'audio-music-background',
         source: './assets/audio/Eggsplosion.mp3'
