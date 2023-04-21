@@ -32,5 +32,20 @@ MyGame.components.Missile = function(spec) {
         }
     }
 
+    that.checkForCollisions = function(entities) {
+        for (let entityId in entities) {
+            if(entities.hasOwnProperty(entityId)) {
+                let entity = entities[entityId];
+                if (that.intersects(entity.model)){
+                    spec.reportEvent({
+                        type:MyGame.enums.Event.MissileCollided,
+                        model: that,
+                        entity: entity
+                    })
+                }
+            }
+        }
+    }
+
     return that;
 };

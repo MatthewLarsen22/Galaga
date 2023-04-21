@@ -52,10 +52,14 @@ MyGame.loader = (function() {
         message: 'Base Entity class loaded',
         onComplete: null
     }, {
-        scripts: ['Components/Butterfly', 'Components/Character', 'Components/Missile'],
+        scripts: ['Components/Bee', 'Components/Butterfly', 'Components/Character', 'Components/Flagship', 'Components/Missile'],
         message: 'Gameplay Components loaded',
         onComplete: null
-    },{
+    }, {
+        scripts: ['Components/EffectEnemyDeath'],
+        message: 'Particle Effect Components loaded',
+        onComplete: null
+    }, {
         scripts: ['Rendering/Core'],
         message: 'Rendering core loaded',
         onComplete: null
@@ -64,7 +68,7 @@ MyGame.loader = (function() {
         message: 'Core Components Rendering loaded',
         onComplete: null
     }, {
-        scripts: ['Rendering/Butterfly', 'Rendering/Character', 'Rendering/Missile'],
+        scripts: ['Rendering/Bee', 'Rendering/Butterfly', 'Rendering/Character', 'Rendering/Flagship', 'Rendering/Missile'],
         message: 'Gameplay Components Rendering loaded',
         onComplete: null
     }, {
@@ -87,11 +91,26 @@ MyGame.loader = (function() {
         key: 'missile',
         source: './assets/graphics/Galaga_Missile.png'
     }, {
+        key: 'bee',
+        source: './assets/graphics/Galaga_Bee.png'
+    }, {
         key: 'butterfly',
         source: './assets/graphics/Galaga_Butterfly.png'
     }, {
+        key: 'flagship',
+        source: './assets/graphics/Galaga_Flagship.png'
+    }, {
+        key: 'particle',
+        source: './assets/graphics/particle.png'
+    }, {
         key: 'background',
         source: './assets/graphics/background.jpg'
+    }, {
+        key: 'missile-launched',
+        source: './assets/audio/missile-launched.mp3'
+    }, {
+        key: 'explosion',
+        source: './assets/audio/explosion.mp3'
     }, {
         key: 'audio-music-background',
         source: './assets/audio/Eggsplosion.mp3'

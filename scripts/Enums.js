@@ -2,5 +2,6 @@
 
 MyGame.enums.Event = Object.freeze({
     MissileFired: 'missile-fired',
-    MissileExitedScreen: 'missile-exited-screen'
+    MissileExitedScreen: 'missile-exited-screen',
+    MissileCollided: 'missile-collided'
 });

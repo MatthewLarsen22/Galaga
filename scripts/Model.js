@@ -13,6 +13,8 @@ MyGame.model = (function(input, components, renderer, assets) {
     let myKeyboard = input.Keyboard();
 
     let butterfly = null;
+    let bee = null;
+    let flagship = null;
     let gameOver = false;
     function reset() {
         MyGame.assets['audio-music-background'].pause();
@@ -61,6 +63,28 @@ MyGame.model = (function(input, components, renderer, assets) {
             renderer: renderer.Butterfly
         };
 
+        bee = components.Bee({
+            size: { width: 32, height: 32 },
+            center: { x: (renderer.core.canvas.width / 2 + 40), y: (renderer.core.canvas.height / 2 - 40) },
+            velocity: 5,
+            reportEvent
+        });
+        entities[nextEntityId++] = {
+            model: bee,
+            renderer: renderer.Bee
+        };
+
+        flagship = components.Flagship({
+            size: { width: 32, height: 32 },
+            center: { x: (renderer.core.canvas.width / 2 -40), y: (renderer.core.canvas.height / 2 - 80) },
+            velocity: 5,
+            reportEvent
+        });
+        entities[nextEntityId++] = {
+            model: flagship,
+            renderer: renderer.Flagship
+        };
+
 
         // Start the background music.
         MyGame.assets['audio-music-background'].loop = true;
@@ -94,6 +118,19 @@ MyGame.model = (function(input, components, renderer, assets) {
                 }
             }
         }
+
+        // Check to see if any enemies were hit by a missile.
+        const entityArray = Object.entries(entities);
+        const filteredArray = entityArray.filter(([entityId, entity]) => entity.model.type > 2);
+        let enemies = Object.fromEntries(filteredArray);
+        for (let entityId in entities) {
+            if(entities.hasOwnProperty(entityId)) {
+                let entity = entities[entityId];
+                if(entity.model.type === MyGame.components.Types.Missile){
+                    entity.model.checkForCollisions(enemies);
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------
@@ -119,15 +156,47 @@ MyGame.model = (function(input, components, renderer, assets) {
     //
     // --------------------------------------------------------------
     function reportEvent(info) {
+        let entityArray;
+        let filteredArray;
         switch (info.type) {
             case MyGame.enums.Event.MissileFired:
+                const soundEffect = new Audio(MyGame.assets['missile-launched'].src);
+                soundEffect.volume = 0.2;
+                soundEffect.play();
+
                 createMissile(info);
                 break;
             case MyGame.enums.Event.MissileExitedScreen:
                 // Remove missiles that have left the screen
-                const entityArray = Object.entries(entities);
-                const filteredArray = entityArray.filter(([entityId, entity]) => entity.model !== info.model)
+                entityArray = Object.entries(entities);
+                filteredArray = entityArray.filter(([entityId, entity]) => entity.model !== info.model);
                 entities = Object.fromEntries(filteredArray);
+                break;
+            case MyGame.enums.Event.MissileCollided:
+                // Remove the missile and the enemy that it collided with
+                if (info.entity.model.type === MyGame.components.Types.Flagship && info.entity.model.lives === 2) {
+                    // If this was a flagship on their first life, simply take a life away and remove the missile
+                    info.entity.model.lives -= 1;
+
+                    entityArray = Object.entries(entities);
+                    filteredArray = entityArray.filter(([entityId, entity]) => entity.model !== info.model);
+                    entities = Object.fromEntries(filteredArray);
+                }
+                else {
+                    // Otherwise, remove the missile and the enemy
+                    entityArray = Object.entries(entities);
+                    filteredArray = entityArray.filter(([entityId, entity]) => entity.model !== info.model && entity.model !== info.entity.model);
+                    entities = Object.fromEntries(filteredArray);
+
+                    const soundEffect = new Audio(MyGame.assets['explosion'].src);
+                    soundEffect.volume = 0.2;
+                    soundEffect.play();
+
+                    MyGame.components.ParticleSystem.enemyDeath({
+                        center: info.entity.model.center,
+                        howMany: 250
+                    });
+                }
                 break;
         }
     }
