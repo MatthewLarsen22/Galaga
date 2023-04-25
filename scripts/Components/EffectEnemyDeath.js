@@ -29,7 +29,7 @@ MyGame.components.ParticleSystem.enemyDeath = function(spec) {
             });
         }
 
-        return false;    // One time emit!
+        return false    // One time emit!
     };
 
     return MyGame.components.ParticleSystem.addEffect(effect);

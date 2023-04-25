@@ -21,14 +21,14 @@ MyGame.components.Character = function(spec) {
     });
 
     that.moveLeft = function(elapsedTime) {
-        let dx = (elapsedTime / spec.velocity )
+        let dx = spec.velocity * elapsedTime;
         if (that.center.x - dx > that.size.width / 2){
             that.center.x -= dx;
         }
     }
 
     that.moveRight = function(elapsedTime) {
-        let dx = (elapsedTime / spec.velocity )
+        let dx = spec.velocity * elapsedTime;
         if ((that.center.x +  dx) < MyGame.renderer.core.canvas.width - that.size.width / 2){
             that.center.x += dx;
         }

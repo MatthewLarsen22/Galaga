@@ -1,5 +1,6 @@
 let MyGame = {
     screens : {},
+    stages: {},
     input: {},
     components: {},
     renderer: {},
@@ -70,6 +71,10 @@ MyGame.loader = (function() {
     }, {
         scripts: ['Rendering/Bee', 'Rendering/Butterfly', 'Rendering/Character', 'Rendering/Flagship', 'Rendering/Missile'],
         message: 'Gameplay Components Rendering loaded',
+        onComplete: null
+    }, {
+        scripts: ['Stages/Stage1', 'Stages/Stage2', 'Stages/ChallengingStage'],
+        message: 'Stages loaded',
         onComplete: null
     }, {
         scripts: ['Model'],

@@ -20,7 +20,7 @@ MyGame.components.Missile = function(spec) {
     });
 
     that.update = function(elapsedTime) {
-        let dy = (elapsedTime / spec.velocity )
+        let dy = spec.velocity * elapsedTime;
         if ((that.center.y - dy) > 0 - spec.size.height){
             that.center.y -= dy;
         }

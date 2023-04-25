@@ -12,9 +12,7 @@ MyGame.model = (function(input, components, renderer, assets) {
     let entities = {};
     let myKeyboard = input.Keyboard();
 
-    let butterfly = null;
-    let bee = null;
-    let flagship = null;
+    let stage = null;
     let gameOver = false;
     function reset() {
         MyGame.assets['audio-music-background'].pause();
@@ -43,7 +41,7 @@ MyGame.model = (function(input, components, renderer, assets) {
         character = components.Character({
             size: { width: 32, height: 32 },
             center: { x: (renderer.core.canvas.width / 2), y: (renderer.core.canvas.height - 50) },
-            velocity: 5,
+            velocity: 300/1000,
             reportEvent
         });
         entities[nextEntityId++] = {
@@ -52,38 +50,11 @@ MyGame.model = (function(input, components, renderer, assets) {
         };
         characterHandlerIds = registerCharacterKeyboardEvents(character);
 
-        butterfly = components.Butterfly({
-            size: { width: 32, height: 32 },
-            center: { x: (renderer.core.canvas.width / 2), y: (renderer.core.canvas.height / 2) },
-            velocity: 5,
-            reportEvent
+        stage = MyGame.stages.Stage1({
+            createBee,
+            createButterfly,
+            createFlagship
         });
-        entities[nextEntityId++] = {
-            model: butterfly,
-            renderer: renderer.Butterfly
-        };
-
-        bee = components.Bee({
-            size: { width: 32, height: 32 },
-            center: { x: (renderer.core.canvas.width / 2 + 40), y: (renderer.core.canvas.height / 2 - 40) },
-            velocity: 5,
-            reportEvent
-        });
-        entities[nextEntityId++] = {
-            model: bee,
-            renderer: renderer.Bee
-        };
-
-        flagship = components.Flagship({
-            size: { width: 32, height: 32 },
-            center: { x: (renderer.core.canvas.width / 2 -40), y: (renderer.core.canvas.height / 2 - 80) },
-            velocity: 5,
-            reportEvent
-        });
-        entities[nextEntityId++] = {
-            model: flagship,
-            renderer: renderer.Flagship
-        };
 
 
         // Start the background music.
@@ -108,6 +79,10 @@ MyGame.model = (function(input, components, renderer, assets) {
     // ------------------------------------------------------------------
     function update(elapsedTime) {
         components.ParticleSystem.update(elapsedTime);
+
+        if (stage) {
+            stage.update(elapsedTime);
+        }
 
         for (let entityId in entities) {
             if(entities.hasOwnProperty(entityId)) {
@@ -205,12 +180,60 @@ MyGame.model = (function(input, components, renderer, assets) {
         let missile = components.Missile({
             size: { width: 32, height: 32 },
             center: { x: info.center.x, y: info.center.y },
-            velocity: 2,
+            velocity: 800/1000,
             reportEvent
         });
         entities[nextEntityId++] = {
             model: missile,
             renderer: renderer.Missile
+        };
+    }
+
+    function createButterfly(entryPattern, finalPosition) {
+        let line = [...entryPattern];
+        line.push({x: (finalPosition.x * 40) + 120, y: (finalPosition.y * 40) + 120})
+        let butterfly = MyGame.components.Butterfly({
+            size: {width: 32, height: 32},
+            center: {x: line[0].x, y: line[0].y},
+            velocity: 300 / 1000,
+            line,
+            reportEvent
+        });
+        entities[nextEntityId++] = {
+            model: butterfly,
+            renderer: MyGame.renderer.Butterfly
+        };
+    }
+
+    function createBee(entryPattern, finalPosition) {
+        let line = [...entryPattern];
+        line.push({x: (finalPosition.x * 40) + 120, y: (finalPosition.y * 40) + 120})
+        let bee = MyGame.components.Bee({
+            size: {width: 32, height: 32},
+            center: {x: line[0].x, y: line[0].y},
+            velocity: 300 / 1000,
+            line,
+            reportEvent
+        });
+        entities[nextEntityId++] = {
+            model: bee,
+            renderer: MyGame.renderer.Bee
+        };
+    }
+
+    function createFlagship(entryPattern, finalPosition) {
+        let line = [...entryPattern];
+        line.push({x: (finalPosition.x * 40) + 120, y: (finalPosition.y * 40) + 120})
+        let flagship = MyGame.components.Flagship({
+            size: {width: 32, height: 32},
+            center: {x: line[0].x, y: line[0].y},
+            velocity: 300 / 1000,
+            line,
+            reportEvent
+        });
+        entities[nextEntityId++] = {
+            model: flagship,
+            renderer: MyGame.renderer.Flagship
         };
     }
 

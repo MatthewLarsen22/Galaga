@@ -42,6 +42,38 @@ MyGame.utilities.math = (function() {
         return (v1.x * v2.y) - (v1.y * v2.x);
     }
 
+    that.computeDistance = function(pt1x, pt1y, pt2x, pt2y) {
+        let dx2 = Math.pow(pt2x - pt1x, 2);
+        let dy2 = Math.pow(pt2y - pt1y, 2);
+
+        return Math.sqrt(dx2 + dy2);
+    }
+
+    that.computeRotation = function(pt1x, pt1y, pt2x, pt2y) {
+        let dx = pt2x - pt1x;
+        let dy = pt2y - pt1y;
+
+        if (dx === 0) {
+            if (pt2y - pt1y < 0){
+                return 0;
+            }
+            else {
+                return Math.PI;
+            }
+        }
+
+        let angle = Math.atan(dy / dx);
+        //console.log(angle * 360/Math.PI);
+        if (pt2x < pt1x) {
+            angle -= Math.PI/2.0;
+        }
+        else {
+            angle += Math.PI/2.0;
+        }
+
+        return angle;
+    }
+
     //------------------------------------------------------------------
     //
     // Computes the angle, and direction (cross product) between two vectors.
