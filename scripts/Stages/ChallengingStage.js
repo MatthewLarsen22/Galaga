@@ -234,6 +234,11 @@ MyGame.stages.ChallengingStage = function(spec) {
                 }
             }
         }
+        if (stageTime > 30000){
+            spec.reportEvent({
+                type: MyGame.enums.Event.StageComplete
+            });
+        }
     }
 
     return that;

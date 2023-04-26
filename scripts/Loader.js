@@ -53,11 +53,11 @@ MyGame.loader = (function() {
         message: 'Base Entity class loaded',
         onComplete: null
     }, {
-        scripts: ['Components/Bee', 'Components/Butterfly', 'Components/Character', 'Components/Flagship', 'Components/Missile'],
+        scripts: ['Components/Bee', 'Components/Butterfly', 'Components/Character', 'Components/Flagship', 'Components/Missile', 'Components/EnemyMissile'],
         message: 'Gameplay Components loaded',
         onComplete: null
     }, {
-        scripts: ['Components/EffectEnemyDeath'],
+        scripts: ['Components/EffectEnemyDeath','Components/EffectPlayerDeath'],
         message: 'Particle Effect Components loaded',
         onComplete: null
     }, {
@@ -69,7 +69,7 @@ MyGame.loader = (function() {
         message: 'Core Components Rendering loaded',
         onComplete: null
     }, {
-        scripts: ['Rendering/Bee', 'Rendering/Butterfly', 'Rendering/Character', 'Rendering/Flagship', 'Rendering/Missile'],
+        scripts: ['Rendering/Bee', 'Rendering/Butterfly', 'Rendering/Character', 'Rendering/Flagship', 'Rendering/Missile', 'Rendering/EnemyMissile', 'Rendering/Score', 'Rendering/GameOver'],
         message: 'Gameplay Components Rendering loaded',
         onComplete: null
     }, {
@@ -96,6 +96,9 @@ MyGame.loader = (function() {
         key: 'missile',
         source: './assets/graphics/Galaga_Missile.png'
     }, {
+        key: 'enemy-missile',
+        source: './assets/graphics/Galaga_Missile.png'
+    }, {
         key: 'bee',
         source: './assets/graphics/Galaga_Bee.png'
     }, {
@@ -107,6 +110,9 @@ MyGame.loader = (function() {
     }, {
         key: 'particle',
         source: './assets/graphics/particle.png'
+    }, {
+        key: 'red-particle',
+        source: './assets/graphics/particle-red.png'
     }, {
         key: 'background',
         source: './assets/graphics/background.jpg'

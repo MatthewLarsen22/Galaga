@@ -1,6 +1,7 @@
 MyGame.stages.Stage2 = function(spec) {
     let that = {};
     let stageTime = 0;
+    let attackCount = 0;
 
     that.entryPatterns = {
         entries: [{
@@ -284,6 +285,18 @@ MyGame.stages.Stage2 = function(spec) {
 
                 }
             }
+        }
+        if (stageTime > 30000 && spec.enemiesKilled()){
+            spec.reportEvent({
+                type: MyGame.enums.Event.StageComplete
+            });
+        }
+        else if (stageTime > (30000 + 5000 * attackCount)) {
+            spec.reportEvent({
+                type: MyGame.enums.Event.Attack,
+                count: 2
+            });
+            attackCount += 1;
         }
     }
 

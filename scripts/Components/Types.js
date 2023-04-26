@@ -10,9 +10,10 @@ MyGame.components.Types = (function() {
         get Undefined() { return 0; },
         get Character() { return 1; },
         get Missile() { return 2; },
-        get Bee() { return 3; },
-        get Butterfly() { return 4; },
-        get Flagship() { return 5; }
+        get EnemyMissile() { return 3; },
+        get Bee() { return 4; },
+        get Butterfly() { return 5; },
+        get Flagship() { return 6; }
     };
 
     return that;
